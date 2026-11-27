@@ -1,0 +1,31 @@
+name = "soulgem"
+defaultTargets = ["Soulgem", "ConLeche", "Lean4Lean", "Batteries"]
+
+# Vendored sources build as libraries of this package, so the build needs no network and no other lakefile.
+# Module names are the upstream ones, so every declaration keeps its upstream name.
+
+# batteries @ 66e469188fe07963e5cf666c7d4433f45b8131c5; its lakefile sets this option package-wide.
+[[lean_lib]]
+name = "Batteries"
+srcDir = "vendor/batteries"
+globs = ["Batteries.+"]
+leanOptions = {linter.missingDocs = true}
+
+# lean4lean @ b73a4e74c5a6ac59800d64c08f79d3f3b746dd0c
+[[lean_lib]]
+name = "Lean4Lean"
+srcDir = "vendor/lean4lean"
+globs = ["Lean4Lean.+"]
+
+[[lean_lib]]
+name = "ConLeche"
+globs = ["ConLeche.+"]
+
+[[lean_lib]]
+name = "Soulgem"
+globs = ["Soulgem.+"]
+
+# Kernel probes and the roots' axiom check; not a default target: `lake build Checks`.
+[[lean_lib]]
+name = "Checks"
+globs = ["Checks.+"]

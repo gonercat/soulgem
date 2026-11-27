@@ -17,6 +17,7 @@ name = "Lean4Lean"
 srcDir = "vendor/lean4lean"
 globs = ["Lean4Lean.+"]
 
+# con-leche @ 65e74db49e89ad2bbd1e90aa4f784954db41fa3a
 [[lean_lib]]
 name = "ConLeche"
 globs = ["ConLeche.+"]
@@ -29,3 +30,8 @@ globs = ["Soulgem.+"]
 [[lean_lib]]
 name = "Checks"
 globs = ["Checks.+"]
+
+# Admitted examples, a nested inductive and structure eta; not a default target: `lake build Examples`.
+[[lean_lib]]
+name = "Examples"
+globs = ["Examples.+"]

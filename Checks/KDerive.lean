@@ -119,12 +119,16 @@ def kfMismatches : MetaM (List String) := do
     | 0, e, acc => some (acc, e)
     | n + 1, .forallE _ t b _, acc => strip n b (t :: acc)
     | _, _, _ => none
+  let some (.recInfo r) := (← getEnv).find? `KF.rec | throwError "KF.rec missing"
+  let [rule] := r.rules | throwError "KF.rec: not one rule"
   let some (doms, body) := strip kfCtx.length d.value [] | throwError "kfStmt: too few binders"
   let some (eqTy, lhs, rhs) := body.eq? | throwError "kfStmt: not an equation"
   let items : List (String × Bool) :=
     [("type", same (← tr [] (← ty `KF)) kfType.type),
      ("mk type", same (← tr [] (← ty `KF.mk)) kfMk.type),
      ("rec type", same (← tr [`u] (← ty `KF.rec)) (kfBlock.recType 0)),
+     ("rule", rule.ctor == kfMk.name && rule.nfields == kfMk.fields.length &&
+        same (← tr [`u] rule.rhs) (kfBlock.ruleRhs 0 0)),
      ("binders", (← doms.mapM (tr [])).length == kfCtx.length &&
         ((← doms.mapM (tr [])).zip kfCtx).all fun (a, b) => same a b),
      ("lhs", same (← tr [] lhs) kfLhs), ("rhs", same (← tr [] rhs) kfRhs),

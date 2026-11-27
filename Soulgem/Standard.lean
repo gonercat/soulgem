@@ -173,15 +173,14 @@ theorem Core.sound_standard (V : Type u) [SetTheory V] {env : VEnv} {rec : List 
     ∃ M : CInterp V, IsModel M env ∧
       (∀ {U e p}, env.HasType U [] e p → ∀ ls, ∃ x, x ∈ˢ interp M ls p []) ∧
       StdNat (M `Nat []) (M `Nat.zero []) (M `Nat.succ []) ∧
-      (env.constants `Nat = some { uvars := 0, type := .sort (.succ .zero) } →
-        ∀ {U e s t}, env.HasType U [] s (.const `Nat []) → env.HasType U [] t (.const `Nat []) →
-          env.HasType U [] e (eqNat s t) → interp M [] s [] = interp M [] t []) := by
+      (∀ {U e s t}, env.HasType U [] s (.const `Nat []) → env.HasType U [] t (.const `Nat []) →
+        env.HasType U [] e (eqNat s t) → interp M [] s [] = interp M [] t []) := by
   obtain ⟨M, MJf, envJf, envJ₁f, hM, -, I, -, hfr⟩ :=
     Admits.model (Core.coreM_model (V := V)) Core.coreEnv_good H
   have hEq : M `Eq = coreM `Eq :=
     hfr _ (lookupC_ne_none (by simp [coreConsts]))
   exact ⟨M, hM, fun he ls => hM.prop_inhabited he ls, (I.canon r hr).stdNat hb hn,
-    fun hc _ _ _ _ hs ht he => hM.eqNat_sound hEq hc hs ht he⟩
+    fun hs ht he => hM.eqNat_sound hEq (nat_const_of_admits H hr hb hn) hs ht he⟩
 
 /-- Under `sound_standard`'s hypotheses, `Nat.succ Nat.zero = Nat.zero` is not provable. -/
 theorem Core.not_succ_zero_eq_zero (V : Type u) [SetTheory V] {env : VEnv} {rec : List RBlock}

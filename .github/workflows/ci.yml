@@ -8,7 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: leanprover/lean-action@v1
       - name: Kernel probes and the roots' axioms
         run: lake build Checks
+      - name: Admitted examples
+        run: lake build Examples
